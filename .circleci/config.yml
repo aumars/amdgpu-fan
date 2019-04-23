@@ -148,6 +148,4 @@ workflows:
           filters:  # release only on tagged builds, ignore all else
             tags:
               only: /^\d+.\d+.\d+$/
-            branches:
-              ignore: /.*/
 
