@@ -16,7 +16,7 @@ git config --global --add core.sshCommand "ssh -o StrictHostKeyChecking=false -i
 git clone ssh://aur@aur.archlinux.org/amdgpu-fan.git aur
 
 # Update it
-cp PKGBUILD aur
+cp PKGBUILD aur/
 cd aur
 /bin/bash "$bindir/makepkg" --config="$config" --printsrcinfo >.SRCINFO
 
@@ -24,7 +24,7 @@ cd aur
 git add PKGBUILD .SRCINFO
 git config user.email "chestm007+aurci@hotmail.com"
 git config user.name "chestm007-ci"
-git commit -m "Release $CIRCLE_TAG"
+git commit -m "Release ${CIRCLE_TAG}"
 
 # Deploy to AUR
 git push origin master

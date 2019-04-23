@@ -108,7 +108,7 @@ jobs:
           name: deploy to aur
           command: |
             cd distro/arch
-            sed -i "s/^pkgver=\d+.\d+.\d+$/pkgver=$CIRCLE_TAG/g" PKGBUILD
+            sed -i "s/^pkgver=[0-9]*\.[0-9]*\.[0-9]*/pkgver=${CIRCLE_TAG}/g" PKGBUILD
             . deploy.sh
 
 
