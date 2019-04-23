@@ -98,6 +98,7 @@ jobs:
       - image: circleci/python:3.7.3-stretch
     working_directory: ~/repo
     steps:
+      - checkout
       - run:
           name: load ssh key
           command: |
