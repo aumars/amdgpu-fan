@@ -126,13 +126,22 @@ workflows:
       - python3.6:
           requires:
             - build
+          filters:
+            tags:
+              only: /.*/
       - python3.7:
           requires:
             - build
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - python3.6
             - python3.7
+          filters:
+            tags:
+              only: /.*/
       - update_downstream_aur_package:
           requires:
             - deploy
