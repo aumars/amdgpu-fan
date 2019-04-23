@@ -44,6 +44,7 @@ build_artifact: &build_artifact
 update_aur_amdgpu_fan_dev: &update_aur_amdgpu_fan_dev
   name: clone amdgpu-fan github aur repo
   command: |
+    mkdir ~/.ssh
     echo "aur.archlinux.org,5.9.250.164 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOZAVWmj2k+dHTfyum7FyIivGcVUkDFHaXmPNxDwF7l8TvkAN8VDQJHEEGJhALMYtNsQ+kt0gksSh4HZqj9n5hI=" >> ~/.ssh/known_hosts
     git clone ssh+git@github.com:chestm007/aur-amdgpu-fan-dev
     cd aur-amdgpu-fan-dev
@@ -134,7 +135,9 @@ workflows:
       - update_downstream_aur_package:
           requires:
             - deploy
-          filters:
+          filters:  # release only on tagged builds, ignore all else
             tags:
               only: /^\d+.\d+.\d+$/
+            branches:
+              ignore: /.*/
 
