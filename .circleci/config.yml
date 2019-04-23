@@ -3,6 +3,7 @@ create_venv: &create_venv
   command: |
     python -m venv venv
 
+
 chmod_usr_share: &chmod_usr_share
   name: chmod usr share to be world read/write/exec
   command: |
