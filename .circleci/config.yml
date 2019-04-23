@@ -42,19 +42,6 @@ build_artifact: &build_artifact
     sed -i "s/PROJECTVERSION/`python get_build_version.py`/g" setup.py
     python setup.py sdist
 
-update_aur_amdgpu_fan_dev: &update_aur_amdgpu_fan_dev
-  name: clone amdgpu-fan github aur repo
-  command: |
-    mkdir ~/.ssh
-    echo "aur.archlinux.org,5.9.250.164 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOZAVWmj2k+dHTfyum7FyIivGcVUkDFHaXmPNxDwF7l8TvkAN8VDQJHEEGJhALMYtNsQ+kt0gksSh4HZqj9n5hI=" >> ~/.ssh/known_hosts
-    echo "github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
-    git clone ssh+git@github.com:chestm007/aur-amdgpu-fan-dev
-    cd aur-amdgpu-fan-dev
-    sed -i "s/^pkgver=\d+.\d+.\d+$/pkgver=$(CIRCLE_TAG)/g" PKGBUILD
-    git add PKGBUILD
-    git commit -a -m "version bump to $(CIRCLE_TAG)"
-    git push
-
 test_steps: &test_steps
   steps:
     - attach_workspace:
@@ -111,11 +98,16 @@ jobs:
       - image: circleci/python:3.7.3-stretch
     working_directory: ~/repo
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - 5d:27:86:9d:37:22:36:7e:1b:3c:a0:1d:64:03:48:18
       - run:
-          <<: *update_aur_amdgpu_fan_dev
+          name: load ssh key
+          command: |
+            echo $AURCI_SSH_KEY | sed 's/::::/\n/g' > /tmp/aurkey
+            chmod 0700 /tmp/aurkey
+      - run:
+          name: deploy to aur
+          command: |
+            sed -i "s/^pkgver=\d+.\d+.\d+$/pkgver=$CIRCLE_TAG/g" PKGBUILD
+            . distro/arch/deploy.sh
 
 
 
