@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -ex
-cd distro/arch
 
 # Set up to run makepkg
 wget https://www.archlinux.org/packages/core/x86_64/pacman/download/ -O pacman.pkg.tar.xz
